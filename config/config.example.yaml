@@ -1,0 +1,22 @@
+# B站 Cookie（必填）
+# 浏览器登录 B站 → F12 → Network → 任意请求 → Cookie 头复制完整值
+bili_cookie: "SESSDATA=xxx; bili_jct=xxx; buvid3=xxx; DedeUserID=123456"
+
+# 飞书文档 token（第一次运行后创建，后续追加）
+# 从飞书文档 URL 提取：https://xxx.feishu.cn/docx/<token>
+feishu_doc_token: ""
+
+# 运行参数
+limit: 0              # 0=全量，N=只拉前N条
+request_interval: 2   # B站请求间隔（秒），避免412
+lark_interval: 3       # 飞书写入间隔（秒），避免限速
+skip_music_ups:       # 纯放松类 UP 主，自动一句话带过
+  - "野生花艺师Fiona"
+  - "中国国家地理景观"
+  - "草莓蛋糕呢-"
+
+# 路由开关
+use_official_ai: true     # 优先用官方AI提纲
+use_subtitle: true        # 有字幕就读
+use_transcribe: false     # 无字幕是否走妙记（耗时长，建议手动控制）
+skip_short_seconds: 60    # 短于这个秒数直接一句话带过

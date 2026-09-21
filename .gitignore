@@ -1,0 +1,23 @@
+# 凭证（绝不提交）
+.env
+config/config.yaml
+*.cookie
+
+# 输出数据
+output/*.json
+output/*.md
+output/*.txt
+output/*.xml
+!output/.gitkeep
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# 临时文件
+*.log
+/tmp/
+.DS_Store
