@@ -104,6 +104,9 @@ lark-cli docs +create --doc-format markdown \
 - **弹幕**：仅总量>100 时取 30 秒窗口密度 top3，且只留≥8 字的有信息量弹幕。
 - **多 P**：`pages_count>1` 时输出各 P 的 cid/part，可逐 P 取字幕。
 - **去重**：`tracker/processed.json` 记录已处理 BVID，定时跑只处理增量。
+- **block ID 完整提取**：解析飞书文档 block 时，必须完整提取 `id="..."` 中的完整字符串（约27字符），禁止截断；否则删除操作会因 ID 不匹配而静默失败。
+- **勾选删除=整段删除**：用户勾选 todo 后，必须删除从 checkbox 到下一个 `<hr/>` 之间的所有 block（p/ul/li），不能只删 checkbox block 本身——否则会留下无 todo 的残留内容。
+- **删除后验证**：批量删除后重新 fetch 文档，确认 checkbox 数量和内容一致；发现"有内容无 checkbox"的孤儿段立即清理。
 
 ## 成本实测（前 10 条 / 总时长 67 分钟）
 
