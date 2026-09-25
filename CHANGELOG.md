@@ -11,8 +11,20 @@
 | 2026-09-25 | 会话A | ⚠️ 首次跑发现1处漂移 | 发布仓根目录无SKILL.md（在docs/下），脚本本地路径不适配 | 修正脚本支持双结构（根/dosc）并重跑全绿 |
 | 2026-09-25 | 会话A | ⚠️ 复跑报CHANGELOG/sync_check漂移 | git确认远端已推送正确，raw CDN缓存延迟造成假漂移 | 脚本增加git对比模式（fetch+origin/master，无缓存延迟），raw仅兜底 |
 | 2026-09-25 | Hermes 本机 | ✅ 全绿（docs/SKILL.md / config/skip_ups.json / CHANGELOG.md / scripts/sync_check.py 四项一致） | 无 | 收工复跑通过；建议后续把 `collector/` 纳入 WATCH_FILES |
+| 2026-09-25 | 会话A | ✅ 对齐后全绿 | 无（fetch 对齐远端 0a11778/ef69490/网页各 commit） | 方案B全链路落地后收工复跑 |
 
 ## 变更日志
+
+### 2026-09-25 · 方案B全链路落地：GitHub Actions 自动校验（会话A）
+- `.github/workflows/audit.yml` 已就位并生效：push 到 master 自动跑 `scripts/audit.py`，生成 AUDIT.md 由 audit-bot 自动提交回仓库（paths-ignore AUDIT.md 防循环）
+- 实测：commit 1664c70 触发 Run#4 → ✅ completed successfully → audit-bot 自动提交 `8e439f4 audit: auto update AUDIT.md [skip ci]`，AUDIT.md 全项 HEALTHY
+- 落地踩坑（已解决，供后续会话参考）：
+  1. 本地 git push workflow 文件被拒（OAuth 缺 workflow scope）→ 改走网页创建/编辑
+  2. 网页创建时文件名输入框**只填 basename**（路径靠 URL `/new/master/.github/workflows/audit.yml` 指定），填完整路径会嵌套 `.github/workflows/.github/workflows/`
+  3. GitHub 新建页 CodeMirror 初始 doc 含占位文本 `Enter file contents here`，bu.type 会追加在其后 → 提交后需 edit 页 Ctrl+Home + Delete 删除占位行
+  4. Upload 页文件名框不支持路径（只取 basename）
+- 现状：任何会话 push 后 GitHub 自动校验，开工读一眼 AUDIT.md 即知机制健康度
+
 
 ### 2026-09-25 · 方案B部分落地：audit.py 本地自检（会话A）
 - 新增 `scripts/audit.py`：仓库健康自检（脚本语法 / config JSON / SKILL关键章节 / CHANGELOG）
