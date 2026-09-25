@@ -168,3 +168,33 @@ lark-cli docs +create --doc-format markdown \
 - `bili_digest.py` 只依赖 `requests`，无模型/飞书依赖，任意环境可跑；
 - 换模型（Claude/GPT/本地）只影响第 3 步；换输出（Notion/Obsidian/邮件）只改第 4 步；
 - 换账号只换 `BILI_COOKIE`；无飞书时用 Whisper 替代第 2 步并写入 `minutes.summary`。
+
+## 多会话协作公约（2026-09-25 生效，防止各会话规则分叉）
+
+同一任务可开多个会话并行优化本机制。所有会话遵守以下公约，保证机制收敛到单一真源：
+
+**真源划分**
+- 规则/数据/脚本（SKILL.md、config/skip_ups.json、CHANGELOG.md、scripts/）→ **GitHub 发布仓**（唯一权威，本地只是缓存）
+- 运行状态（todo 勾选、正文、分区）→ **飞书主文档**（实时协作）
+- 敏感凭证（Cookie）→ 飞书私密文件，不落 GitHub
+
+**开工 5 步**（每个会话开始任务前必须执行，缺一不可）：
+1. `git pull`（或重读 GitHub raw SKILL.md）拉取最新规则与数据
+2. `lark-cli docs +fetch` 飞书主文档拿最新状态
+3. 跑 `python3 scripts/sync_check.py <本地仓库根>` → 本地 vs GitHub 差异必须全绿，有漂移先对齐
+4. 读 `CHANGELOG.md`：查看其他会话最近改动
+5. 向用户汇报"已对齐到最新"再开工
+
+**收工 3 步**（每次修改后必须执行）：
+1. 修改的规则/数据/脚本 `git push`（禁止只留在本地）
+2. `CHANGELOG.md` 追加一行：`日期 | 会话 | 改了什么 | 为什么`
+3. 重大改动 → 同步更新《会话交接说明》
+
+**单会话写锁**：
+- 同一时间只允许一个会话执行"写飞书文档"流程；执行前在文档头部加一行 `⏳ 处理中 by 会话X`，完成后删除
+- 写飞书前必须 fetch 最新 block ID，禁止用旧 ID 覆盖他人刚写入的内容
+- 同一规则当天只允许一个会话修改；git 冲突时以 CHANGELOG 最新记录为准
+
+**监督机制**：
+- 每次开工跑 `sync_check.py`，结果记入 CHANGELOG「协议执行监督」表
+- 发现漂移（本地≠GitHub / 文档不合规）立即修正并记录变形点，不得带病干活
