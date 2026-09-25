@@ -13,6 +13,12 @@
 
 ## 变更日志
 
+### 2026-09-25 · 方案B部分落地：audit.py 本地自检（会话A）
+- 新增 `scripts/audit.py`：仓库健康自检（脚本语法 / config JSON / SKILL关键章节 / CHANGELOG）
+- `AUDIT.md` 报告机制：push 前本地跑 audit 生成报告提交仓库
+- GitHub Actions 自动校验暂未启用：当前 push 凭证缺 workflow 权限，workflow 文件已备好（.github/workflows/audit.yml），待授权后启用
+- 背景：多会话协作升级为 push 即校验，减少对人工监督的依赖
+
 ### 2026-09-25 · 多会话协作公约落地（会话A）
 - 新增 `scripts/sync_check.py`：防漂移监督脚本，开工强制跑，对比本地 vs GitHub 权威源
 - 新增本文件 `CHANGELOG.md`：变更广播 + 监督记录
