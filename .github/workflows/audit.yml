@@ -1,0 +1,34 @@
+
+Enter file contents here
+name: mechanism-audit
+
+on:
+  push:
+    branches: [master]
+    paths-ignore: [AUDIT.md]
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run audit
+        run: python3 scripts/audit.py
+
+      - name: Commit AUDIT report
+        run: |
+          git config user.name "audit-bot"
+          git config user.email "audit-bot@users.noreply.github.com"
+          git add AUDIT.md
+          git diff --cached --quiet || git commit -m "audit: auto update AUDIT.md [skip ci]"
+          git push
