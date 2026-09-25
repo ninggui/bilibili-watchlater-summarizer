@@ -14,12 +14,13 @@ import urllib.request
 REPO = "ninggui/bilibili-watchlater-summarizer"
 BRANCH = "master"
 RAW_BASE = f"https://raw.githubusercontent.com/{REPO}/{BRANCH}"
-# 需要对齐的文件清单：本地路径 -> 仓库内路径（docs/ 下为发布版 SKILL.md）
+# 需要对齐的文件清单：(本地候选路径列表, 仓库内路径)
+# 本地结构有两种：主仓根目录放 SKILL.md；发布仓放 docs/SKILL.md
 WATCH_FILES = [
-    ("SKILL.md", "docs/SKILL.md"),
-    ("config/skip_ups.json", "config/skip_ups.json"),
-    ("CHANGELOG.md", "CHANGELOG.md"),
-    ("scripts/sync_check.py", "scripts/sync_check.py"),
+    (["SKILL.md", "docs/SKILL.md"], "docs/SKILL.md"),
+    (["config/skip_ups.json"], "config/skip_ups.json"),
+    (["CHANGELOG.md"], "CHANGELOG.md"),
+    (["scripts/sync_check.py"], "scripts/sync_check.py"),
 ]
 
 
@@ -30,9 +31,18 @@ def fetch_raw(path: str) -> str:
         return r.read().decode("utf-8")
 
 
-def load_local(path: str) -> str:
-    with open(path, encoding="utf-8") as f:
-        return f.read()
+def load_local(candidates: list, base: str) -> tuple:
+    """按候选路径依次尝试读取，返回 (内容, 实际路径)"""
+    for rel in candidates:
+        path = f"{base}/{rel}"
+        try:
+            with open(path, encoding="utf-8") as f:
+                return f.read(), path
+        except FileNotFoundError:
+            continue
+        except Exception as e:
+            return None, f"{path} ({e})"
+    return None, None
 
 
 def diff_report(local: str, remote: str) -> tuple:
@@ -64,16 +74,14 @@ def main() -> int:
     print(f"权威源: {RAW_BASE}")
     print("=" * 60)
     dirty = False
-    for local_rel, remote_rel in WATCH_FILES:
-        local_path = f"{base}/{local_rel}"
-        try:
-            local = load_local(local_path)
-        except FileNotFoundError:
-            print(f"❌ 本地缺失: {local_rel}")
+    for local_cands, remote_rel in WATCH_FILES:
+        local, used_path = load_local(local_cands, base)
+        if local is None:
+            print(f"❌ 本地缺失: {local_cands[0]}（已尝试: {', '.join(local_cands)}）")
             dirty = True
             continue
-        except Exception as e:
-            print(f"❌ 本地读取失败: {local_rel} ({e})")
+        if isinstance(used_path, str) and "(" in used_path:
+            print(f"❌ 本地读取失败: {used_path}")
             dirty = True
             continue
         try:
@@ -85,9 +93,9 @@ def main() -> int:
             continue
         same, diffs = diff_report(local, remote)
         if same:
-            print(f"✅ 一致: {local_rel}")
+            print(f"✅ 一致: {remote_rel}（本地 {used_path}）")
         else:
-            print(f"❌ 漂移: {local_rel}")
+            print(f"❌ 漂移: {remote_rel}（本地 {used_path}）")
             for d in diffs:
                 print(d)
             dirty = True
