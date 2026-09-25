@@ -18,6 +18,14 @@
 - `AUDIT.md` 报告机制：push 前本地跑 audit 生成报告提交仓库
 - GitHub Actions 自动校验暂未启用：当前 push 凭证缺 workflow 权限，workflow 文件已备好（.github/workflows/audit.yml），待授权后启用
 - 背景：多会话协作升级为 push 即校验，减少对人工监督的依赖
+### 2026-09-25 · 收集端并入本仓 + 凭证安全修复（Hermes 本机）
+- 新增 `collector/`（B站稍后再看自动收集端）：Feed API 轮询 → 去重 → 积压池 → 有空位按发布时间补加；v5 规则（默认暂停添加 / 不腾位 / 单轮上限 60）
+  - `collector/scripts/bilibili_watch_later.py`：凭证与路径改为环境变量（`BILI_COOKIE` / `BILI_COOKIE_FILE` / `BILI_DATA_DIR` / `BILI_SKIP_UPS`），脚本内不再硬编码
+  - `collector/scripts/bilibili_toview_restore.py`（腾位恢复）、`collector/scripts/bilibili_toview_dedup.py`（重复清理）、`collector/scripts/run_collector.sh`（定时外壳）
+  - 生效 `config/skip_ups.json` 黑名单环节①：feed 入库前按 up mid/名称过滤（实测一轮跳过 6 条）
+- `README.md` 升级为「收集端 + 总结端」全链路说明；`collector/SKILL.md` + `collector/README.md`
+- **凭证安全修复**：《会话交接说明.md》移除明文 Cookie（本仓为公开仓库）——凭证改由飞书私密文件 / 本机 `BILI_COOKIE_FILE` 提供
+- 待办：`collector/` 尚未纳入 `scripts/sync_check.py` 的 WATCH_FILES（建议后续会话补充）
 
 ### 2026-09-25 · 多会话协作公约落地（会话A）
 - 新增 `scripts/sync_check.py`：防漂移监督脚本，开工强制跑，对比本地 vs GitHub 权威源

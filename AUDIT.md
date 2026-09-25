@@ -1,6 +1,6 @@
 # AUDIT · 机制健康自检报告
 
-> 自动生成：2026-09-25 09:10:14 UTC ｜ commit: 8401ecf add GitHub Actions auto-audit (plan B): audit.py + workflow + AUDIT.md
+> 自动生成：2026-09-25 09:16:53 UTC ｜ commit: be11901 feat: 收集端并入本仓（collector/）+ README 全链路化 + 凭证安全修复
 
 **总体状态：✅ HEALTHY**
 

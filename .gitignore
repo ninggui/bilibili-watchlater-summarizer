@@ -21,3 +21,7 @@ venv/
 *.log
 /tmp/
 .DS_Store
+
+# 收集端运行数据（积压池/ledger/暂停开关/日志）
+collector/data/
+collector/logs/
