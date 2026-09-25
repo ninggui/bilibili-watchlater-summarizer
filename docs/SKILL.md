@@ -33,6 +33,8 @@ description: 自动拉取 B站「稍后再看」，先按分区/时长/标题做
 ```
 bilibili-watchlater-summarizer/
 ├── SKILL.md
+├── config/
+│   └── skip_ups.json            # UP黑名单（纯音乐/纯视觉/无内容，自动入库+总结跳过）
 ├── scripts/
 │   ├── bili_digest.py          # 取数 + 字幕质量分级 + 路由决策（仅依赖 requests）
 │   └── transcribe_fallback.py  # 妙记转写兜底编排（豆包/飞书环境，可选）
@@ -109,6 +111,7 @@ lark-cli docs +create --doc-format markdown \
 - **选轨**：优先中文原文轨（`ai-zh`、`ai_type=0`），避免选到机翻轨。
 - **分区路由**：内置 B站 tid 映射（知识/科技/汽车/美食/音乐/舞蹈…），决定无字幕时是否值得转写。
 - **标题信号**：纯享/纯音乐/伴奏/声浪/ASMR/助眠/试听/翻唱，或花艺/插花/风景/风光/治愈/城市漫步/航拍等纯视觉词命中时不主动转写；但标题带"教程/详解/怎么拍/入门"等教学词时视为有口播，仍走转写（避免误伤花艺教程、风光摄影教学）。
+- **UP 黑名单跳过（2026-09-25 用户确认）**：纯音乐/纯视觉/无内容类 UP 整体跳过——**不入稍后再看、不总结、不进文档**。名单见 `config/skip_ups.json`（当前 13 位：JLRS-LeoFM、JLRS-jayfm、FM音乐珍藏馆、施利TV、李明娥、老黎和小黎、北京山水民乐艺术团、花之了Flowers_Know_、野生花艺师Fiona、花艺师凡、8KRAW、东韵Dongyun、纯享木匠师Olof）。生效环节：① feed 自动入库（toview/add 前按 up mid 过滤）② toview 拉取分流（命中即跳过/一句话带过）③ 文档总结。判断口径：UP 最近视频全为纯音乐/纯视觉无口播（ASMR/试听/演奏/花艺/风光等），或签名明确纯音乐类；有口播的教程类（远征教插花、九婶的微醺日常）不列入。新增黑名单时更新 `config/skip_ups.json` 并同步 GitHub。
 - **弹幕**：仅总量>100 时取 30 秒窗口密度 top3，且只留≥8 字的有信息量弹幕。
 - **多 P**：`pages_count>1` 时输出各 P 的 cid/part，可逐 P 取字幕。
 - **去重**：`tracker/processed.json` 记录已处理 BVID，定时跑只处理增量。
