@@ -1,6 +1,6 @@
 # AUDIT · 机制健康自检报告
 
-> 自动生成：2026-09-25 09:32:32 UTC ｜ commit: 1664c70 Update audit.yml
+> 自动生成：2026-09-25 09:34:10 UTC ｜ commit: b133c57 chore: 方案B落地记录 + 监督表更新
 
 **总体状态：✅ HEALTHY**
 
