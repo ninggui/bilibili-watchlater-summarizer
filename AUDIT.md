@@ -1,6 +1,6 @@
 # AUDIT · 机制健康自检报告
 
-> 自动生成：2026-09-25 09:42:02 UTC ｜ commit: 421d644 chore: 记录sync_check监督结果与todo双删(164/167)
+> 自动生成：2026-09-26 01:41:44 UTC ｜ commit: a0a46dd chore: 新增3位美食UP黑名单(用户2026-09-26确认) + 监督记录
 
 **总体状态：✅ HEALTHY**
 
@@ -10,8 +10,8 @@
 - ✅ PASS 语法: scripts/bili_digest.py
 - ✅ PASS 语法: scripts/sync_check.py
 - ✅ PASS 语法: scripts/transcribe_fallback.py
-- ✅ PASS config: skip_ups.json 可解析，13 条黑名单
--     明细: {'确认': 11, '疑似': 2}
+- ✅ PASS config: skip_ups.json 可解析，16 条黑名单
+-     明细: {'确认': 14, '疑似': 2}
 - ✅ PASS SKILL(docs/SKILL.md): 关键规则齐全
 - ✅ PASS CHANGELOG: 非空且含监督表与变更日志
 
