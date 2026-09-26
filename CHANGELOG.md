@@ -13,6 +13,7 @@
 | 2026-09-25 | Hermes 本机 | ✅ 全绿（docs/SKILL.md / config/skip_ups.json / CHANGELOG.md / scripts/sync_check.py 四项一致） | 无 | 收工复跑通过；建议后续把 `collector/` 纳入 WATCH_FILES |
 | 2026-09-25 | 会话A | ✅ 对齐后全绿 | 无（fetch 对齐远端 0a11778/ef69490/网页各 commit） | 方案B全链路落地后收工复跑 |
 | 2026-09-25 | 本会话（云端Linux） | ✅ 全绿（git对比模式，docs/SKILL.md / config/skip_ups.json / CHANGELOG.md / scripts/sync_check.py 一致） | 无 | 开工对齐通过；完成 todo 双删（164/167，文档端+B站端） |
+| 2026-09-26 | 本会话（云端Linux） | ✅ 全绿 | 无 | 开工对齐；新增3位美食UP黑名单（定格食验室/我是荻丽婶/留意炫饭吖，用户确认）；缺失86条待补齐 |
 
 ## 变更日志
 
