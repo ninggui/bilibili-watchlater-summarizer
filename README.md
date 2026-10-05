@@ -1,6 +1,6 @@
-<div align="center">
+<img src="./assets/cover.png" alt="B站稍后再看自动总结" width="100%">
 
-![cover](assets/cover.png)
+<div align="center">
 
 # B站稍后再看 · 自动收集 + 逐条总结
 
